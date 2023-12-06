@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Inicializa variáveis
+total_time=0
+times=()
+mean=0
+variance=0
+
+
+
+# Executa o loop 20 vezes
+
+        for i in {1..20}; do
+            # Calcula o tempo real de execução
+            start_time=$(date +%s.%N)
+            ./caixeiro < entrada3.txt
+            end_time=$(date +%s.%N)
+            
+            execution_time=$(echo "$end_time - $start_time" | bc -l)
+            
+            # Acumula o tempo total e armazena os tempos individuais
+            total_time=$(echo "$total_time + $execution_time" | bc -l)
+            times+=($execution_time)
+        done
+
+         # Calcula a média
+        mean=$(echo "$total_time / 20" | bc -l)
+
+        # Calcula o desvio padrão
+        for time in "${times[@]}"; do
+        variance=$(echo "$variance + ($time - $mean)^2" | bc -l)
+        done
+
+        variance=$(echo "$variance / 20" | bc -l)
+        standard_deviation=$(echo "sqrt($variance)" | bc -l)
+
+        # Exibe os resultados
+        echo "entrada:$j"
+        echo "Tempo médio de execução: $mean segundos"
+        echo "Desvio padrão: $standard_deviation segundos"
+        total_time=0
+        times=()
+        mean=0
+        variance=0
